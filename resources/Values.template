@@ -1,0 +1,12 @@
+dockerRegistry: nexus.local/v1/repo
+imagePullSecrets: regcred
+
+replicaCount: 1
+
+image:
+  name: $imagename
+  tag: $imagetag
+  pullPolicy: Always
+
+namespace: $msname
+
