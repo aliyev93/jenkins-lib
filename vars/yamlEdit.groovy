@@ -7,7 +7,7 @@ import groovy.io.FileType
 import groovy.json.JsonSlurper
 
 def call(env, imgname, imgtag){
-    def file = readFile(file: "${dev}.yaml")
+    def file = readFile(file: "${env}.yaml")
     def yamlfile = new Yaml().load(file)
     yamlfile.image.name="${imgname}"
     yamlfile.image.tag="${imgtag}"

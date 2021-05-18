@@ -16,8 +16,8 @@ def call() {
         echo "Skip helmUtils"
         return
     }
-    def imageName = "mavenvest"
-    def imageTag = "v2.3.5"
+    def imageName = "${env.DOCKER_REPO}/${env.PROJECT_NAME}/${APP_NAME}"
+    def imageTag = "${BUILD_ID}"
     slaveTemplates = new PodTemplates()
     slaveTemplates.helmTemplate() {
         stage("Check valueTemp methods"){
@@ -28,7 +28,7 @@ def call() {
                 container ("helm") {
                     sh "ls -la"
                     sh "helm repo add HelmRepo https://nexus.kapitalbank.az/repository/HelmRepo/"
-                    sh "helm pull testproject-maventest --untar"
+                    sh "helm pull ${PROJECT_NAME}-${APP_NAME} --untar"
                     yamlEdit(helmEnv, imageName, imageTag)
                     sh "helm package ."
                     sh "curl -u admin:admin12345 https://nexus.kapitalbank.az/repository/HelmRepo/ --upload-file ./*.tgz"

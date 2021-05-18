@@ -8,6 +8,7 @@ def call() {
     if (!binding.hasVariable('MAVEN_VERSION')) {
         env.MAVEN_VERSION="3.6.3-jdk-8-slim"
     }
+    env.DOCKER_REPO = "http://nexus.kapitalbank.az/bankrepo"
 
     slaveTemplates = new PodTemplates()
     slaveTemplates.mavenTemplate() {
@@ -57,12 +58,12 @@ def call() {
                     url: "${GIT_URL}"
                 unstash name: 'JAR'
                 container(name: "kaniko", shell: "/busybox/sh"){
-                    sh '''
+                    sh """
                     #!/busybox/sh
                     ls -la 
                     pwd
-                    /kaniko/executor --context $PWD --insecure --skip-tls-verify --destination nexus.kblab.local:8089/v1/repositories/tstdevops/images/mvnapp:$BUILD_NUMBER --destination nexus.kblab.local:8089/v1/repositories/tstdevops/images/mvnapp:latest
-                    '''
+                    /kaniko/executor --context $PWD --insecure --skip-tls-verify --destination "${env.DDOCKER_REPO}/${env.PROJECT_NAME}/${APP_NAME}:${BUILD_ID}" --destination "${env.DDOCKER_REPO}/${env.PROJECT_NAME}/${APP_NAME}":latest
+                    """
                 }
 
             }
